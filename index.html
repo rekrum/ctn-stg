@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>こっとにょ vs 缶＆カレー</title>
+  <style>
+    body { margin: 0; background: #eef; overflow: hidden; font-family: sans-serif; }
+    canvas { background: #ccf; display: block; margin: 0 auto; }
+    #startScreen, #gameOverScreen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.9); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 10;
+    }
+    button { font-size: 20px; margin: 10px; padding: 10px 20px; }
+    #controls { position: absolute; top: 10px; right: 10px; z-index: 5; }
+  </style>
+</head>
+<body>
+
+<!-- 音量やBGM ON/OFF スイッチ -->
+<div id="controls">
+  <label><input type="checkbox" id="bgmToggle" checked> BGM ON</label><br>
+  <label>音量: <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1"></label>
+</div>
+
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+
+<!-- スタート画面 -->
+<div id="startScreen">
+  <h1>こっとにょ vs 缶＆カレー</h1>
+  <p>スマホは画面をタップ、PCは←→キーで操作</p>
+  <button onclick="startGame()">スタート！</button>
+</div>
+
+<!-- ゲームオーバー画面 -->
+<div id="gameOverScreen" style="display:none;">
+  <h1>ゲームオーバー！</h1>
+  <p id="finalScoreText"></p>
+  <button onclick="location.reload()">もう一回</button>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
