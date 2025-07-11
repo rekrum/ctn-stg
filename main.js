@@ -1,9 +1,7 @@
-
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const ASPECT_RATIO = 2 / 3;
-
 function resizeCanvas() {
   const height = window.innerHeight;
   const width = height * ASPECT_RATIO;
@@ -15,7 +13,6 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// 画像
 const playerImg = new Image();
 playerImg.src = "cottonyo_face.png";
 const redCanImg = new Image();
@@ -23,7 +20,6 @@ redCanImg.src = "透過ラオ.png";
 const curryImg = new Image();
 curryImg.src = "food_curry-rice_7142.png";
 
-// 音
 const bgm = new Audio("bgm.mp3");
 bgm.loop = true;
 bgm.volume = 0.2;
@@ -75,18 +71,49 @@ canvas.addEventListener("touchmove", e => {
 });
 canvas.addEventListener("touchend", () => isTouching = false);
 
+function getMinSlotGap() {
+  if (score < 1000) return 2;
+  else if (score < 2000) return 1;
+  else return 0;
+}
+
+function getSlotCount() {
+  if (score < 1000) return 6;
+  else if (score < 2000) return 7;
+  else return 8;
+}
+
 function spawnBullet() {
   const bulletSize = canvas.width * 0.08;
+  const slotCount = getSlotCount();
+  const slotWidth = canvas.width / slotCount;
+  const usedSlots = new Set();
+  const gap = getMinSlotGap();
+
   for (let i = 0; i < difficulty; i++) {
+    let slot;
+    let attempts = 0;
+    do {
+      slot = Math.floor(Math.random() * slotCount);
+      attempts++;
+    } while (
+      [...usedSlots].some(s => Math.abs(s - slot) <= gap) &&
+      attempts < 10
+    );
+
+    if (attempts >= 10) continue;
+
+    usedSlots.add(slot);
     const isGold = score >= 1000 && Math.random() < 0.05;
+    const type = isGold ? "gold" : (Math.random() < 0.5 ? "can" : "curry");
     bullets.push({
-      x: Math.random() * (canvas.width - bulletSize),
+      x: slot * slotWidth + (slotWidth - bulletSize) / 2,
       y: -bulletSize,
       width: bulletSize,
       height: bulletSize,
       speed: canvas.height * (0.004 + Math.random() * 0.003),
       img: redCanImg,
-      type: isGold ? "gold" : (Math.random() < 0.5 ? "can" : "curry")
+      type: type
     });
   }
 }
