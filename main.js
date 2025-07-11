@@ -31,7 +31,7 @@ bgm.volume = 0.2;
 const se_hit = new Audio("hit.mp3");
 se_hit.volume = 0.2;
 
-// 音量・ミュート制御
+// BGM ON/OFF & 音量スライダー（常に操作可能）
 document.getElementById("bgmToggle").addEventListener("change", e => {
   bgm.muted = !e.target.checked;
 });
@@ -41,7 +41,12 @@ document.getElementById("volumeControl").addEventListener("input", e => {
   se_hit.volume = vol;
 });
 
-// 初期化
+// タップ時BGM再生
+function tryPlayBGM() {
+  bgm.play().catch(() => {});
+}
+
+// プレイヤー初期化
 let playerSize = canvas.width * 0.15;
 let player = {
   x: canvas.width / 2 - playerSize / 2,
@@ -65,7 +70,7 @@ document.addEventListener("keyup", e => keys[e.key] = false);
 canvas.addEventListener("touchstart", e => {
   isTouching = true;
   touchX = e.touches[0].clientX;
-  bgm.play();
+  tryPlayBGM();
 });
 canvas.addEventListener("touchmove", e => {
   touchX = e.touches[0].clientX;
@@ -88,9 +93,10 @@ function spawnBullet() {
   }
 }
 
-// 更新
+// ゲーム更新
 function update() {
   if (gameOver) return;
+
   if (keys["ArrowLeft"]) player.x -= player.speed;
   if (keys["ArrowRight"]) player.x += player.speed;
 
@@ -102,10 +108,11 @@ function update() {
   }
 
   player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+
   bullets.forEach(b => b.y += b.speed);
   bullets = bullets.filter(b => b.y < canvas.height);
 
-  // ヒットボックス
+  // 当たり判定（80% ヒットボックス）
   const hitboxScale = 0.8;
   const hitboxW = player.width * hitboxScale;
   const hitboxH = player.height * hitboxScale;
@@ -147,9 +154,10 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
+// ゲーム開始
 function startGame() {
   document.getElementById("startScreen").style.display = "none";
-  bgm.play();
+  tryPlayBGM();
   setInterval(spawnBullet, 700);
   gameLoop();
 }
