@@ -41,29 +41,21 @@
   </style>
 </head>
 <body onclick="tryPlayBGM()">
-
-<!-- BGMコントロール（常に表示） -->
 <div id="controls">
   <label><input type="checkbox" id="bgmToggle" checked> BGM ON</label><br>
   <label>音量: <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.2"></label>
 </div>
-
 <canvas id="gameCanvas"></canvas>
-
-<!-- スタート画面 -->
 <div id="startScreen">
   <h1>こっとにょ vs 缶＆カレー</h1>
   <p>スマホはタップ、PCは←→キーで操作</p>
   <button onclick="startGame()">スタート！</button>
 </div>
-
-<!-- ゲームオーバー画面 -->
 <div id="gameOverScreen" style="display:none;">
   <h1>ゲームオーバー！</h1>
   <p id="finalScoreText"></p>
   <button onclick="location.reload()">もう一回</button>
 </div>
-
 <script src="main.js"></script>
 </body>
 </html>
